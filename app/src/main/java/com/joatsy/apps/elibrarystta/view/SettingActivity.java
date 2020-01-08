@@ -1,8 +1,7 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.joatsy.apps.elibrarystta.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -24,11 +25,11 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static com.joatsy.apps.elibrarystta.MainActivity.SERVER_ADDRS;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_addr;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_hp;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_id;
-import static com.joatsy.apps.elibrarystta.MainActivity.user_agent;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.SERVER_ADDRS;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_addr;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_hp;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_id;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
 public class SettingActivity extends AppCompatActivity {
     EditText tx_alamat;

@@ -1,18 +1,20 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.joatsy.apps.elibrarystta.Adapter.AdapterRecyclerBook;
 import com.joatsy.apps.elibrarystta.Data.DataBook;
 import com.joatsy.apps.elibrarystta.Event.RecyclerItemClickListener;
+import com.joatsy.apps.elibrarystta.R;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,9 +25,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import static com.joatsy.apps.elibrarystta.MainActivity.master_dir;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.master_dir;
 
-public class MybookActivity extends AppCompatActivity {
+public class ReadOfflineActivity extends AppCompatActivity {
+    Button bReadOffline;
     Intent intent;
     private RecyclerView recycler_book;
     public static AdapterRecyclerBook recycler_adapter;
@@ -35,9 +38,13 @@ public class MybookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mybook);
-        recycler_book = (RecyclerView) findViewById(R.id.rc_mybook);
+        setContentView(R.layout.activity_read_offline);
+
+        bReadOffline=findViewById(R.id.rc_mybook);
+
+       // recycler_book = (RecyclerView) findViewById(R.id.rc_mybook);
         data_book = populateList();
+
         if (data_book.size()<=0)
         {
             Toast.makeText(getBaseContext(), "Anda tidak mempunyai daftar buku pinjaman!" , Toast.LENGTH_LONG).show();
@@ -54,7 +61,7 @@ public class MybookActivity extends AppCompatActivity {
                         String id_buku = data_book.get(position).getId();
                         String file_location = data_book.get(position).getLocation();
                         //Toast.makeText(getBaseContext(), "List (" + id_buku + ")" + nama_buku + " Ditekan" , Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MybookActivity.this, ReadBookActivity.class);
+                        Intent intent = new Intent(ReadOfflineActivity.this, ReadBookActivity.class);
                         intent.putExtra("id_buku", id_buku);
                         intent.putExtra("judul_buku", nama_buku);
                         intent.putExtra("file_location", file_location);
@@ -142,7 +149,7 @@ public class MybookActivity extends AppCompatActivity {
                         Log.d("data_list_item [" + a + "] :",data_list_item[a]);
                         if (a==0)
                         {
-                           id_book = data_list_item[a].replace("id:","");
+                            id_book = data_list_item[a].replace("id:","");
                         }
                         else if (a==1)
                         {

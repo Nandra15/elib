@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context="com.joatsy.apps.elibrarystta.ViewerActivity">
+    tools:context="com.joatsy.apps.elibrarystta.view.ViewerActivity">
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"

@@ -6,7 +6,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="3dp"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"

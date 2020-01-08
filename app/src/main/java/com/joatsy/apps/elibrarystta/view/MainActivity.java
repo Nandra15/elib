@@ -1,48 +1,36 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
+import com.joatsy.apps.elibrarystta.view.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
     static String SERVER_ADDRS = "http://172.168.0.1/elibrary/api/v1/";
-    public static String user_agent="Apps Nandra 20.19 (E-Library STTA)";
+    public static String user_agent = "Apps Nandra 20.19 (E-Library STTA)";
     Intent intent;
-    CardView btn_caribuku, btn_pinjaman, btn_syarat, btn_pengaturan;
-    ImageView ic_syarat, ic_pengaturan, ic_cari;
-    TextView tx_syarat, tx_pengaturan, tx_cari;
-    public static String root_data="";
-    public static String master_dir="";
-    public static String log_dir="";
-    public static String session_user_nim="";
-    public static String session_user_id="";
-    public static String session_user_name="";
-    public static String session_user_hp="";
-    public static String session_user_addr="";
-    public static String session_user_id_temp="";
-    public static  boolean mode_offline=false;
+    private CardView btn_caribuku, btn_pinjaman, btn_syarat, btn_pengaturan;
+    private ImageView ic_syarat, ic_pengaturan, ic_cari;
+    private TextView tx_syarat, tx_pengaturan, tx_cari;
+    public static String root_data = "";
+    public static String master_dir = "";
+    public static String log_dir = "";
+    public static String session_user_nim = "";
+    public static String session_user_id = "";
+    public static String session_user_name = "";
+    public static String session_user_hp = "";
+    public static String session_user_addr = "";
+    public static String session_user_id_temp = "";
+    public static boolean mode_offline = false;
+
+    private SharedPrefs prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         tx_syarat = findViewById(R.id.lb_home_syarat);
         tx_pengaturan = findViewById(R.id.lb_home_pengaturan);
         tx_cari = findViewById(R.id.lb_home_cari);
+
+        prefs = new SharedPrefs(this);
+
+        if (!prefs.isLoggedIn()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+       /*
         PackageManager m = getPackageManager();
         String s = getPackageName();
         intent = getIntent();
@@ -316,5 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 file.delete();
             }
         }
+
+        */
     }
 }

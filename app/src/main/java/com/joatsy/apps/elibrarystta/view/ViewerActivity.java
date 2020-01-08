@@ -1,4 +1,4 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -20,20 +20,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.joatsy.apps.elibrarystta.Data.ItemsItem;
-import com.joatsy.apps.elibrarystta.Data.ResponseRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.utils.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -53,24 +43,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static com.joatsy.apps.elibrarystta.MainActivity.SERVER_ADDRS;
-import static com.joatsy.apps.elibrarystta.MainActivity.master_dir;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_id;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_nim;
-import static com.joatsy.apps.elibrarystta.MainActivity.user_agent;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.SERVER_ADDRS;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.master_dir;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_id;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_nim;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
 public class ViewerActivity extends AppCompatActivity {
     PDFView pdfviewer;
@@ -89,10 +73,9 @@ public class ViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_viewer);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
-        pdfviewer = (PDFView) findViewById(R.id.pdfviewer);
-        btn_pinjam = (Button) findViewById(R.id.btn_pinjam_proc);
-        //pdfviewer.fromAsset("contoh.pdf").load();
-        AndroidNetworking.initialize(this);
+        pdfviewer = findViewById(R.id.pdfviewer);
+        btn_pinjam = findViewById(R.id.btn_pinjam_proc);
+
         intent = getIntent();
         if (intent.hasExtra("id_buku") && intent.hasExtra("judul_buku")) {
             id_buku = getIntent().getStringExtra("id_buku");
@@ -421,7 +404,7 @@ public class ViewerActivity extends AppCompatActivity {
                 urlConnection.setDoOutput(true);
 
                 OutputStream os = urlConnection.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Constants._UTF8));
                 writer.write(rslt.parameter);
                 writer.flush();
                 writer.close();
@@ -431,7 +414,7 @@ public class ViewerActivity extends AppCompatActivity {
                 Log.d("responseCode PostData", "responseCode : " + responseCode);
                 if (responseCode == 201 || responseCode == 200) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    StringBuffer sb = new StringBuffer("");
+                    StringBuffer sb = new StringBuffer();
                     String line = "";
                     while ((line = in.readLine()) != null) {
                         sb.append(line);
@@ -566,43 +549,6 @@ public class ViewerActivity extends AppCompatActivity {
 
     }
 
-    public void PostDataJSON(String url, String command, ResponseRequest responseRequest) {
-//        String json = new Gson().toJson(responseRequest);
-        JSONObject jsonObject = new JSONObject();
-        JSONObject item= new JSONObject();
-        JSONArray items= new JSONArray();
-        try {
-            item.put("id_buku",responseRequest.getItems().get(0).getIdBuku());
-            item.put("qty",responseRequest.getItems().get(0).getQty());
-            items.put(item);
-
-            jsonObject.put("id_member", responseRequest.getIdMember());
-            jsonObject.put("tanggal", responseRequest.getTanggal());
-            jsonObject.put("durasi", responseRequest.getDurasi());
-            jsonObject.put("items", items);
-
-            Log.e("body", jsonObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    AndroidNetworking.post(url)
-            .addBodyParameter(jsonObject)
-//                .addHeaders("Content-Type","application/json")
-            .setPriority(Priority.MEDIUM)
-            .build()
-            .getAsJSONObject(new JSONObjectRequestListener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.e("ResulFAN", response.toString());
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    Log.e("errorFan", anError.getErrorBody()+" :::"+ anError.getMessage());
-                }
-            });
-}
-
 
     public boolean checkInet(int msg) {
         boolean connected = false;
@@ -655,10 +601,7 @@ public class ViewerActivity extends AppCompatActivity {
 
     boolean check_in_mybook(String id_book) {
         String my_book_list = file_read(master_dir, "list.dat");
-        if (my_book_list.contains("id:" + id_book + ";")) {
-            return true;
-        } else
-            return false;
+        return my_book_list.contains("id:" + id_book + ";");
     }
 
     void show_form_load() {
@@ -667,8 +610,8 @@ public class ViewerActivity extends AppCompatActivity {
         form.setContentView(R.layout.activity_loan);
         form.setCancelable(false);
         //form.create();
-        Button btn_loan = (Button) form.findViewById(R.id.btn_loan_proc);
-        Spinner sp_loan = (Spinner) form.findViewById(R.id.sp_loan_duration);
+        Button btn_loan = form.findViewById(R.id.btn_loan_proc);
+        Spinner sp_loan = form.findViewById(R.id.sp_loan_duration);
         for (int a = 1; a <= 3; a++) {
             arraylist.add(String.valueOf(a));
         }
@@ -692,9 +635,6 @@ public class ViewerActivity extends AppCompatActivity {
                         //new GetData().execute(SERVER_ADDRS + "pinjam.php?user_id=" + session_user_id + "&id_buku=" + id_buku + "&duration=" + duration, "loan");
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
                         String thisdate = sdf.format(new Date());
-                        List<ItemsItem> items = new ArrayList<>();
-                        items.add(new ItemsItem(1, Integer.parseInt(id_buku)));
-                        ResponseRequest responseRequest = new ResponseRequest(15030001, thisdate, Integer.parseInt(duration), items);
 //                        String parameters = "{\n" +
 //                                "\t\"id_member\":" + session_user_id + ",\n" +
 //                                "\t\"tanggal\": " + thisdate + ",\n" +
@@ -706,8 +646,6 @@ public class ViewerActivity extends AppCompatActivity {
 //                                "\t\t}\n" +
 //                                "\t]\n" +
 //                                "}";
-                         PostDataJSON2(SERVER_ADDRS + "peminjaman", "loan",responseRequest);
-
                     }
                 } else {
                     Toast.makeText(getBaseContext(), "Silahkan pilih durasi pinjaman", Toast.LENGTH_LONG).show();
@@ -715,26 +653,6 @@ public class ViewerActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void PostDataJSON2(String s, String loan, ResponseRequest responseRequest) {
-        OkHttpClient client = new OkHttpClient();
-
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, "{\"id_member\":15030001,\"tanggal\":\"2020-01-07 15-05-16\",\"durasi\":1,\"items\":[{\"id_buku\":11,\"qty\":1}]}");
-        Request request = new Request.Builder()
-                .url("http://172.168.0.1/elibrary/api/v1/peminjaman")
-                .post(body)
-                .addHeader("content-type", "application/json")
-                .addHeader("cache-control", "no-cache")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            Log.e("response", response.toString());
-        } catch (IOException e) {
-            Log.e("okhtpp",e.getMessage());
-        }
     }
 
     class myOnItemSelectedListener implements AdapterView.OnItemSelectedListener {

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">E-Library STTA</string>
+    <string name="out_of_network">Anda berada di luar Jangkauan</string>
+    <string name="general_error">Terjadi Kesalahan</string>
 </resources>

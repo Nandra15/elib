@@ -1,4 +1,4 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.view.login.LoginActivity;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,8 +30,8 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static com.joatsy.apps.elibrarystta.MainActivity.SERVER_ADDRS;
-import static com.joatsy.apps.elibrarystta.MainActivity.user_agent;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.SERVER_ADDRS;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
 public class RegisterActivity extends AppCompatActivity {
     Button btn_register, btn_login;

@@ -1,4 +1,4 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,12 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.joatsy.apps.elibrarystta.Adapter.AdapterRecyclerBook;
 import com.joatsy.apps.elibrarystta.Data.DataBook;
 import com.joatsy.apps.elibrarystta.Event.RecyclerItemClickListener;
+import com.joatsy.apps.elibrarystta.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,9 +33,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.joatsy.apps.elibrarystta.MainActivity.SERVER_ADDRS;
-import static com.joatsy.apps.elibrarystta.MainActivity.master_dir;
-import static com.joatsy.apps.elibrarystta.MainActivity.user_agent;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.SERVER_ADDRS;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.master_dir;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
 public class BookActivity extends AppCompatActivity {
     Intent intent;

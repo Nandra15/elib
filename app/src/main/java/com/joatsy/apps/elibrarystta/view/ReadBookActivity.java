@@ -1,4 +1,4 @@
-package com.joatsy.apps.elibrarystta;
+package com.joatsy.apps.elibrarystta.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +18,8 @@ import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
+import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.view.login.LoginActivity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -36,11 +37,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.joatsy.apps.elibrarystta.MainActivity.SERVER_ADDRS;
-import static com.joatsy.apps.elibrarystta.MainActivity.master_dir;
-import static com.joatsy.apps.elibrarystta.MainActivity.mode_offline;
-import static com.joatsy.apps.elibrarystta.MainActivity.session_user_id;
-import static com.joatsy.apps.elibrarystta.MainActivity.user_agent;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.SERVER_ADDRS;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.master_dir;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.mode_offline;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_id;
+import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
 public class ReadBookActivity  extends AppCompatActivity {
     PDFView pdfviewer;
