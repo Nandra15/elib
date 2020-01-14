@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.base.BaseActivity;
 import com.joatsy.apps.elibrarystta.utils.Constants;
 
 import java.io.BufferedInputStream;
@@ -56,7 +57,7 @@ import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_id;
 import static com.joatsy.apps.elibrarystta.view.MainActivity.session_user_nim;
 import static com.joatsy.apps.elibrarystta.view.MainActivity.user_agent;
 
-public class ViewerActivity extends AppCompatActivity {
+public class ViewerActivity extends BaseActivity {
     PDFView pdfviewer;
     Button btn_pinjam;
     Intent intent;
@@ -65,7 +66,6 @@ public class ViewerActivity extends AppCompatActivity {
     String filename;
     String duration;
     String file_location;
-    private ProgressDialog loading_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,27 +101,6 @@ public class ViewerActivity extends AppCompatActivity {
                     //String parameters = "{\"id_member\":" + session_user_id + ",\"id_buku\":" + id_buku + "}";
                     //Toast.makeText(getBaseContext(), "BACA FILE : " + "membaca,membaca," + parameters, Toast.LENGTH_LONG).show();
                     new PostData().execute(SERVER_ADDRS + "membaca", "baca", parameters);
-                    //new PostData().execute(SERVER_ADDRS + "membaca", "membaca","id_member=" + session_user_id + "&id_buku=" + id_buku );
-                    /*
-                    filename = file_location.substring(file_location.lastIndexOf('/') + 1);
-                    File file = new File(getBaseContext().getCacheDir(), filename);
-                    if (!file.exists())
-                    {
-                        loading_dialog.dismiss();
-                        loading_dialog = new ProgressDialog(ViewerActivity.this);
-                        loading_dialog.setMessage("Mencoba menampilkan file buku. Tunggu sebentar...");
-                        loading_dialog.setIndeterminate(true);
-                        loading_dialog.show();
-                        new DownloadFilePdf().execute(file_location, filename);
-                    }
-                    else {
-//                        Log.i("BUKA FILE : ", file.getAbsolutePath());
-//                        Toast.makeText(getBaseContext(), "BUKA FILE : " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                        showpdf(file);
-                    }
-                     */
-
-
                 } else {
                     Toast.makeText(getBaseContext(), "Buku ini sudah ada dalam daftar pinjaman anda!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(ViewerActivity.this, ReadBookActivity.class);
@@ -247,8 +226,8 @@ public class ViewerActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(GetDownloadResult result) {
-            loading_dialog.dismiss();
-            filename = result.url.substring(result.url.lastIndexOf('/') + 1);
+hideLoading();
+filename = result.url.substring(result.url.lastIndexOf('/') + 1);
             //Toast.makeText(getBaseContext(), "SIMPAN FILE : " +filename , Toast.LENGTH_LONG).show();
             //file_write_to_chace(result.value,filename);
             File file = new File(getBaseContext().getCacheDir(), filename);
@@ -314,7 +293,7 @@ public class ViewerActivity extends AppCompatActivity {
 
         protected void onPostExecute(GetDataResult result) {
             if (result.command.equals("file")) {
-                loading_dialog.dismiss();
+                hideLoading();
                 Log.i("URL file", result.url);
                 Log.i("VALUE file", result.value);
                 if (!result.value.equals("FAIL")) {
@@ -338,7 +317,7 @@ public class ViewerActivity extends AppCompatActivity {
                 }
             }
             if (result.command.equals("loan")) {
-                loading_dialog.dismiss();
+                hideLoading();
                 Log.i("URL file", result.url);
                 Log.i("VALUE file", result.value);
                 if (!result.value.equals("OK")) {
@@ -440,18 +419,15 @@ public class ViewerActivity extends AppCompatActivity {
 
         protected void onPostExecute(PostDataResult result) {
             if (result.command.equals("baca")) {
-                loading_dialog.dismiss();
+                hideLoading();
                 Log.i("URL baca", result.url);
                 Log.i("VALUE baca", result.value);
                 if (result.value.equals("{\"status\":true,\"message\":\"Berhasil\"}")) {
                     filename = file_location.substring(file_location.lastIndexOf('/') + 1);
                     File file = new File(getBaseContext().getCacheDir(), filename);
                     if (!file.exists()) {
-                        loading_dialog.dismiss();
-                        loading_dialog = new ProgressDialog(ViewerActivity.this);
-                        loading_dialog.setMessage("Mencoba menampilkan file buku. Tunggu sebentar...");
-                        loading_dialog.setIndeterminate(true);
-                        loading_dialog.show();
+                        hideLoading();
+                        showDialog("Mencoba menampilkan file buku. Tunggu sebentar...");
                         new DownloadFilePdf().execute(file_location, filename);
                     } else {
                         showpdf(file);
@@ -511,14 +487,6 @@ public class ViewerActivity extends AppCompatActivity {
                             my_book_list = my_book_list + "&&&&id:" + id_buku + ";" + "title:" + judul_buku + ";" + "file:" + filename + ";" + "file_location:" + file_location + ";duration:" + duration + ";from:" + thisdate + ";end:" + enddate;
                         }
                     }
-                    //id:4;title:Aircraft Operations Volume I Flight Procedures;file:Air_operation.pdf;file_location:http://172.168.0.1/elibrary/uploads/pdf/Air_operation.pdfduration:1;from:2019-12-27;end:2019-12-28
-                    //
-                    //
-                    //
-                    //id:11;title:Military Avionics Systems;file:Wiley_-_Military_Avionics_Systems.pdf;file_location:http://172.168.0.1/elibrary/uploads/pdf/Wiley_-_Military_Avionics_Systems.pdf duration:1;from:2019-12-27;end:2019-12-28
-                    //id:20;title:Flight-crew human factors handbook  CAP 737;file:Flight-crew_human_factors_handbook.pdf;file_location:http://172.168.0.1/elibrary/uploads/pdf/Flight-crew_human_factors_handbook.pdf duration:1;from:2019-12-27;end:2019-12-28
-                    //id:17;title:Stress in Aircraft and Shell Structure Volume 2;file:stress_in_aircraft_by_kuhn_Vol_2.pdf;file_location:http://172.168.0.1/elibrary/uploads/pdf/stress_in_aircraft_by_kuhn_Vol_2.pdf duration:1;from:2019-12-27;end:2019-12-28
-
                     file_write(true, my_book_list, master_dir, "list.dat");
                     File file_source = new File(getBaseContext().getCacheDir(), filename);
                     File file_destination = new File(master_dir, filename);
@@ -549,32 +517,6 @@ public class ViewerActivity extends AppCompatActivity {
 
     }
 
-
-    public boolean checkInet(int msg) {
-        boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            connected = true;
-        } else {
-            connected = false;
-            if (msg == 1) {
-                android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(ViewerActivity.this).create();
-                alertDialog.setTitle("Kesalahan");
-                alertDialog.setMessage("Tidak ditemukan koneksi internet");
-                alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
-
-        }
-        return connected;
-    }
 
     void showpdf(File file) {
         pdfviewer.fromFile(file)
@@ -628,24 +570,7 @@ public class ViewerActivity extends AppCompatActivity {
                 if (!duration.equals("")) {
                     form.cancel();
                     if (checkInet(1) == true) {
-                        loading_dialog = new ProgressDialog(ViewerActivity.this);
-                        loading_dialog.setMessage("Mencoba meminjam file buku. Tunggu sebentar...");
-                        loading_dialog.setIndeterminate(true);
-                        loading_dialog.show();
-                        //new GetData().execute(SERVER_ADDRS + "pinjam.php?user_id=" + session_user_id + "&id_buku=" + id_buku + "&duration=" + duration, "loan");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-                        String thisdate = sdf.format(new Date());
-//                        String parameters = "{\n" +
-//                                "\t\"id_member\":" + session_user_id + ",\n" +
-//                                "\t\"tanggal\": " + thisdate + ",\n" +
-//                                "\t\"durasi\": " + duration + ",\n" +
-//                                "\t\"items\": [\n" +
-//                                "\t\t{\n" +
-//                                "\t\t\t\"id_buku\": " + id_buku + ",\n" +
-//                                "\t\t\t\"qty\": 1\n" +
-//                                "\t\t}\n" +
-//                                "\t]\n" +
-//                                "}";
+                        showDialog("Mencoba meminjam file buku. Tunggu sebentar...");
                     }
                 } else {
                     Toast.makeText(getBaseContext(), "Silahkan pilih durasi pinjaman", Toast.LENGTH_LONG).show();

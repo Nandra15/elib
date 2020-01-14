@@ -35,6 +35,7 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
         bRegister = findViewById(R.id.btn_login_register);
 
         presenter = new LoginPresenter(ApiClient.getClient().create(ApiInterface.class), this);
+
         if (checkInet(1)) {
             bLogin.setOnClickListener(view -> {
                 nim = txUserId.getText().toString();
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
 
     @Override
     public void loading() {
-        showDialog();
+        showDialog("Mencoba login. Tunggu sebentar...");
     }
 
     @Override

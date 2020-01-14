@@ -37,9 +37,9 @@ public class BaseActivity extends AppCompatActivity {
         return connected;
     }
 
-    protected void showDialog() {
+    protected void showDialog(String s) {
         loading_dialog = new ProgressDialog(this);
-        loading_dialog.setMessage("Mencoba login. Tunggu sebentar...");
+        loading_dialog.setMessage(s);
         loading_dialog.setIndeterminate(true);
         loading_dialog.show();
     }

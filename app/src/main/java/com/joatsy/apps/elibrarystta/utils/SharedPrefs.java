@@ -7,9 +7,12 @@ public class SharedPrefs {
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
 
-    public static final String SP_APP = "SP_APP";
+    static final String SP_APP = "SP_APP";
+
+
     public static final String IS_LOGED_IN = "IS_LOGED_IN";
     public static final String NIM = "NIM";
+    public static final String NAMA = "NAMA";
 
 
     public SharedPrefs(Context context) {
@@ -50,6 +53,22 @@ public class SharedPrefs {
 
     public Boolean isLoggedIn() {
         return sp.getBoolean(IS_LOGED_IN, false);
+    }
+
+    public Boolean getBoolean(String key) {
+        return sp.getBoolean(key, false);
+    }
+
+    public String getString(String key) {
+        return sp.getString(key, "null");
+    }
+
+    public Float getFloat(String key) {
+        return sp.getFloat(key,0);
+    }
+
+    public Integer getInt(String key) {
+        return sp.getInt(key, 0);
     }
 
 

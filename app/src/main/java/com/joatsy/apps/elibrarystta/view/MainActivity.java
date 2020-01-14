@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = new SharedPrefs(this);
 
-        if (!prefs.isLoggedIn()) {
+        if (!prefs.getBoolean(SharedPrefs.IS_LOGED_IN)) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
