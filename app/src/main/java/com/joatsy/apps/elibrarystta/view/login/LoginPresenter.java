@@ -25,7 +25,7 @@ public class LoginPresenter extends LoginView {
     Disposable login(String nim, String password) {
         view.loading();
         String md5_pass = convert_md5(password);
-        return apiInterface.JJJ(nim, md5_pass, "123456")
+        return apiInterface.JJJ(nim, md5_pass, "123")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
