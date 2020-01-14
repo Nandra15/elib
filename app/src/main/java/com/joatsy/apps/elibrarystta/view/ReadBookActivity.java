@@ -120,7 +120,7 @@ public class ReadBookActivity  extends AppCompatActivity {
                             }
                             delete_file_expired(id_buku);
                         }
-                        if (mode_offline==true)
+                        if (mode_offline)
                         {
                             new AlertDialog.Builder(ReadBookActivity.this)
                                     .setCancelable(false)

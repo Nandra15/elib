@@ -1,12 +1,15 @@
 package com.joatsy.apps.elibrarystta.network;
 
 import com.joatsy.apps.elibrarystta.Data.LoginResponse;
+import com.joatsy.apps.elibrarystta.Data.ProfilResponse;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ApiInterface {
     @FormUrlEncoded
@@ -14,6 +17,9 @@ public interface ApiInterface {
     Observable<LoginResponse> JJJ(@Field("nim") String nim,
                                   @Field("password") String pass,
                                   @Field("mac_addr") String mac);
+
+    @GET("auth")
+    Single<ProfilResponse> getProfil(@Query("id") int nim);
 
 
 //    @FormUrlEncoded

@@ -8,8 +8,10 @@ import io.reactivex.disposables.Disposable;
 abstract class LoginView extends BaseView {
 
     abstract Disposable login(String nama, String password);
+    abstract Disposable getprofil(String nim);
 
     interface view extends BaseInterface {
         void success(String s);
+        void profil(String s);
     }
 }

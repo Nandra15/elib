@@ -17,6 +17,7 @@ import com.joatsy.apps.elibrarystta.view.MainActivity;
 import com.joatsy.apps.elibrarystta.view.RegisterActivity;
 
 import static com.joatsy.apps.elibrarystta.utils.SharedPrefs.NIM;
+import static com.joatsy.apps.elibrarystta.utils.SharedPrefs.PROFIL;
 
 public class LoginActivity extends BaseActivity implements LoginView.view {
     private EditText txUserId, txPassword;
@@ -33,6 +34,8 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
         txPassword = findViewById(R.id.tx_login_password);
         bLogin = findViewById(R.id.btn_login_proc);
         bRegister = findViewById(R.id.btn_login_register);
+
+
 
         presenter = new LoginPresenter(ApiClient.getClient().create(ApiInterface.class), this);
 
@@ -65,9 +68,15 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
     public void success(String s) {
         Log.e("success", s + " ");
         hideLoading();
+        presenter.getprofil(nim);
+    }
+
+    @Override
+    public void profil(String s) {
         SharedPrefs prefs = new SharedPrefs(this);
         prefs.saveSPBoolean(SharedPrefs.IS_LOGED_IN, true);
         prefs.saveSPInt(NIM, Integer.parseInt(nim));
+        prefs.saveSPString(PROFIL, s);
         toHome();
     }
 

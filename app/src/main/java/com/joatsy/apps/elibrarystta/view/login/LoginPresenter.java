@@ -2,6 +2,7 @@ package com.joatsy.apps.elibrarystta.view.login;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.joatsy.apps.elibrarystta.R;
 import com.joatsy.apps.elibrarystta.network.ApiInterface;
 
@@ -25,12 +26,31 @@ public class LoginPresenter extends LoginView {
     Disposable login(String nim, String password) {
         view.loading();
         String md5_pass = convert_md5(password);
-        return apiInterface.JJJ(nim, md5_pass, "123")
+        return apiInterface.JJJ(nim, password, "123")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
                 .subscribe(loginResponse -> {
                             view.success(loginResponse.toString());
+                        },
+                        throwable -> {
+                            if (isOutOfNetwork(throwable))
+                                view.error(R.string.out_of_network);
+                            else
+                                view.error(R.string.general_error);
+                            Log.e("error", throwable.getMessage() + ":" + getErrorBody(throwable));
+                        });
+    }
+
+    @Override
+    Disposable getprofil(String nim) {
+        view.loading();
+        return apiInterface.getProfil(Integer.parseInt(nim))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+                .subscribe(profilResponse -> {
+                            view.profil(new Gson().toJson(profilResponse));
                         },
                         throwable -> {
                             if (isOutOfNetwork(throwable))

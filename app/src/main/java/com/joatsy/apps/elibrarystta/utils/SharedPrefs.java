@@ -13,6 +13,7 @@ public class SharedPrefs {
     public static final String IS_LOGED_IN = "IS_LOGED_IN";
     public static final String NIM = "NIM";
     public static final String NAMA = "NAMA";
+    public static final String PROFIL = "PROFIL";
 
 
     public SharedPrefs(Context context) {
@@ -47,7 +48,7 @@ public class SharedPrefs {
 
     }
 
-    public float getNIM() {
+    public Integer getNIM() {
         return sp.getInt(NIM, 0);
     }
 

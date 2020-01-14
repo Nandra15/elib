@@ -134,21 +134,17 @@ public class ViewerActivity extends BaseActivity {
                 .setCancelable(false)
                 .setTitle("Konfirmasi")
                 .setMessage("Apakah anda yakin tidak jadi meminjam?")
-                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
+                .setNegativeButton("Tidak", (arg0, arg1) -> {
 
-                    }
                 })
-                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        new PostData().execute(SERVER_ADDRS + "membaca/back", "back", "nim=" + session_user_nim + "&id_buku=" + id_buku);
-                        File file = new File(getBaseContext().getCacheDir(), filename);
-                        //Toast.makeText(getBaseContext(), "DELETE FILE : " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                        if (file.exists()) {
-                            //pdfviewer.removeAllViewsInLayout();
-                            file.delete();
-                            finish();
-                        }
+                .setPositiveButton("Ya", (arg0, arg1) -> {
+                    new PostData().execute(SERVER_ADDRS + "membaca/back", "back", "nim=" + session_user_nim + "&id_buku=" + id_buku);
+                    File file = new File(getBaseContext().getCacheDir(), filename);
+                    //Toast.makeText(getBaseContext(), "DELETE FILE : " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    if (file.exists()) {
+                        //pdfviewer.removeAllViewsInLayout();
+                        file.delete();
+                        finish();
                     }
                 })
                 .create().show();

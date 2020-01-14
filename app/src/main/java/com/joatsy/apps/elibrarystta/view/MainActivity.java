@@ -1,20 +1,37 @@
 package com.joatsy.apps.elibrarystta.view;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.joatsy.apps.elibrarystta.Data.ProfilResponse;
 import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.base.BaseActivity;
 import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
 import com.joatsy.apps.elibrarystta.view.login.LoginActivity;
 
-public class MainActivity extends AppCompatActivity {
-    static String SERVER_ADDRS = "http://172.168.0.1/elibrary/api/v1/";
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import static com.joatsy.apps.elibrarystta.network.ApiClient.BASE_URL;
+
+public class MainActivity extends BaseActivity {
+    static String SERVER_ADDRS = BASE_URL;
     public static String user_agent = "Apps Nandra 20.19 (E-Library STTA)";
-    Intent intent;
+    //    Intent intent;
     private CardView btn_caribuku, btn_pinjaman, btn_syarat, btn_pengaturan;
     private ImageView ic_syarat, ic_pengaturan, ic_cari;
     private TextView tx_syarat, tx_pengaturan, tx_cari;
@@ -49,40 +66,35 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = new SharedPrefs(this);
 
-        if (!prefs.getBoolean(SharedPrefs.IS_LOGED_IN)) {
+        if (!prefs.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
-       /*
+
         PackageManager m = getPackageManager();
         String s = getPackageName();
-        intent = getIntent();
-        try
-        {
+//        intent = getIntent();
+        try {
             PackageInfo p = m.getPackageInfo(s, 0);
             root_data = p.applicationInfo.dataDir;
-            Log.e("joatsy ---> ", "root dir :  " + root_data );
+            Log.e("joatsy ---> ", "root dir :  " + root_data);
             master_dir = root_data + "/master/";
-            log_dir  = root_data + "/log/";
+            log_dir = root_data + "/log/";
             final File newFile = new File(master_dir);
             newFile.mkdir();
-            session_user_id_temp = file_read(master_dir,"account.dat");
+            session_user_id_temp = file_read(master_dir, "account.dat");
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("yourtag", "Error Package name not found ", e);
         }
         clear_chace();
-        if (intent.hasExtra("session_user_id")) {
-            session_user_id = getIntent().getStringExtra("session_user_id");
-            session_user_nim = getIntent().getStringExtra("session_user_nim");
-            session_user_name = getIntent().getStringExtra("session_user_name");
-            session_user_hp = getIntent().getStringExtra("session_user_hp");
-            session_user_addr = getIntent().getStringExtra("session_user_addr");
-        }
 
+        getProfil();
+//        }
 
+/*
        if (session_user_id.equals(""))
         {
-            if (checkInet(0)==true)
+            if (checkInet(0))
             {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity (intent);
@@ -112,17 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        */
+        clear_data();
+        file_write(true, session_user_id, master_dir, "account.dat");
         btn_caribuku.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mode_offline==true)
-                {
+                if (mode_offline) {
 
-                }
-                else
-                {
+                } else {
                     Intent intent = new Intent(MainActivity.this, FindBookActivity.class);
-                    startActivity (intent);
+                    startActivity(intent);
                 }
                 //Toast.makeText(getBaseContext(), "Tombol Cari Buku Ditekan" , Toast.LENGTH_LONG).show();
 
@@ -139,21 +152,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Toast.makeText(getBaseContext(), "Tombol Pinjaman Ditekan" , Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this, MybookActivity.class);
-                startActivity (intent);
+                startActivity(intent);
             }
         });
 
         btn_syarat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mode_offline==true)
-                {
+                if (mode_offline) {
 
-                }
-                else
-                {
+                } else {
                     Intent intent = new Intent(MainActivity.this, TermActivity.class);
-                    startActivity (intent);
+                    startActivity(intent);
                 }
                 //Toast.makeText(getBaseContext(), "Tombol Syarat Ditekan" , Toast.LENGTH_LONG).show();
 
@@ -163,19 +173,26 @@ public class MainActivity extends AppCompatActivity {
         btn_pengaturan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mode_offline==true)
-                {
+                if (mode_offline) {
 
-                }
-                else
-                {
+                } else {
                     Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                    startActivity (intent);
+                    startActivity(intent);
                 }
                 //Toast.makeText(getBaseContext(), "Tombol Pengaturan Ditekan" , Toast.LENGTH_LONG).show();
 
             }
         });
+    }
+
+    private void getProfil() {
+        ProfilResponse profilResponse =
+                new Gson().fromJson(prefs.getString(SharedPrefs.PROFIL), ProfilResponse.class);
+        session_user_id = profilResponse.getData().getId();
+        session_user_nim = profilResponse.getData().getNim();
+        session_user_name = profilResponse.getData().getNama();
+        session_user_hp = profilResponse.getData().getNoTelp();
+        session_user_addr = profilResponse.getData().getMacAddress();
     }
 
     @Override
@@ -184,46 +201,11 @@ public class MainActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setTitle("Konfirmasi")
                 .setMessage("Apakah anda yakin ingin keluar aplikasi?")
-                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
+                .setNegativeButton("Tidak", (arg0, arg1) -> {
 
-                    }
                 })
-                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        System.exit(0);
-                    }
-                })
+                .setPositiveButton("Ya", (arg0, arg1) -> System.exit(0))
                 .create().show();
-    }
-
-    public boolean checkInet(int msg)
-    {
-        boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            connected = true;
-        }
-        else {
-            connected = false;
-            if (msg==1)
-            {
-                android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Kesalahan");
-                alertDialog.setMessage("Tidak ditemukan koneksi internet");
-                alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
-
-        }
-        return connected;
     }
 
     private String file_read(String location_file, String name_file) {
@@ -236,83 +218,68 @@ public class MainActivity extends AppCompatActivity {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
 
-            while ( (line = bufferedReader.readLine()) != null )
-            {
+            while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line + System.getProperty("line.separator"));
             }
             fileInputStream.close();
             line = stringBuilder.toString();
 
             bufferedReader.close();
-        }
-        catch(FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             Log.d("Read error", ex.getMessage());
-        }
-        catch(IOException ex) {
+        } catch (IOException ex) {
             Log.d("Read error", ex.getMessage());
         }
         return line;
     }
 
-    boolean file_write(Boolean newFile, String data,String location_file, String name_file) {
+    boolean file_write(Boolean newFile, String data, String location_file, String name_file) {
         try {
-            new File(location_file  ).mkdir();
-            File file = new File(location_file+ name_file);
+            new File(location_file).mkdir();
+            File file = new File(location_file + name_file);
             if (!file.exists()) {
                 file.createNewFile();
-            }
-            else
-            {
-                if (newFile==true)
-                {
+            } else {
+                if (newFile == true) {
                     file.delete();
                     file.createNewFile();
                 }
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
             fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
 
             return true;
-        }  catch(FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             Log.d("Write Error", ex.getMessage());
-        }  catch(IOException ex) {
+        } catch (IOException ex) {
             Log.d("Write Error", ex.getMessage());
         }
-        return  false;
+        return false;
     }
 
-    public class GetDataResult
-    {
+    public class GetDataResult {
         public String value;
         public String command;
         public String url;
     }
 
-    void clear_chace()
-    {
-        File dir_cache = new File(getBaseContext().getCacheDir(),"");
+    void clear_chace() {
+        File dir_cache = new File(getBaseContext().getCacheDir(), "");
         File[] files = dir_cache.listFiles();
-        for (File file:files)
-        {
-            if (file.exists())
-            {
+        for (File file : files) {
+            if (file.exists()) {
                 file.delete();
             }
         }
     }
 
-    void clear_data()
-    {
-        File dir_cache = new File(master_dir,"");
+    void clear_data() {
+        File dir_cache = new File(master_dir, "");
         File[] files = dir_cache.listFiles();
-        for (File file:files)
-        {
-            if (file.exists())
-            {
+        for (File file : files) {
+            if (file.exists()) {
                 file.delete();
             }
         }
-
-        */
     }
 }
