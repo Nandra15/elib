@@ -5,14 +5,20 @@ public class DataBook {
     private String value;
     private String id_root;
     private String file_location;
+    private String id_peminjaman;
     private int status;
 
-    public DataBook(String id_root, String id, String value, int status,String file_location) {
+    public DataBook(String id_root, String id, String value, int status,String file_location, String id_peminjaman) {
+        this.id_peminjaman = id_peminjaman;
         this.id_root = id_root;
         this.id = id;
         this.value = value;
         this.status = status;
         this.file_location = file_location;
+    }
+
+    public String getId_peminjaman() {
+        return id_peminjaman;
     }
 
     public String getIdRoot() {

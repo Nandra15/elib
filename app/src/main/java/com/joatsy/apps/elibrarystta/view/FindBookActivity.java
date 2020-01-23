@@ -36,7 +36,7 @@ public class FindBookActivity  extends AppCompatActivity  {
     Spinner sp_category;
     Button btn_find;
     EditText tx_name;
-    String kategori;
+    private String kategori = "";
     ArrayList<String> arraylist = new ArrayList<String>();
     ArrayAdapter<String> adapter;
     private ProgressDialog loading_dialog;

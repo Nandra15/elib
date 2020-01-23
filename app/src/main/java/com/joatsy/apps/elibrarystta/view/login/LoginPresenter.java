@@ -38,7 +38,7 @@ public class LoginPresenter extends LoginView {
                                 view.error(R.string.out_of_network);
                             else
                                 view.error(R.string.general_error);
-                            Log.e("error", throwable.getMessage() + ":" + getErrorBody(throwable));
+                            Log.e("error login", throwable.getMessage() + ":" + getErrorBody(throwable));
                         });
     }
 
@@ -57,7 +57,7 @@ public class LoginPresenter extends LoginView {
                                 view.error(R.string.out_of_network);
                             else
                                 view.error(R.string.general_error);
-                            Log.e("error", throwable.getMessage() + ":" + getErrorBody(throwable));
+                            Log.e("error get profil", throwable.getMessage() + ":" + getErrorBody(throwable));
                         });
     }
 

@@ -15,6 +15,7 @@ import com.joatsy.apps.elibrarystta.Adapter.AdapterRecyclerBook;
 import com.joatsy.apps.elibrarystta.Data.DataBook;
 import com.joatsy.apps.elibrarystta.Event.RecyclerItemClickListener;
 import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,12 +36,14 @@ public class ReadOfflineActivity extends AppCompatActivity {
     public static ArrayList<DataBook> data_book;
     ArrayList<String> arraylist = new ArrayList<String>();
     private ProgressDialog loading_dialog;
+    private SharedPrefs prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_offline);
 
         bReadOffline=findViewById(R.id.rc_mybook);
+        prefs= new SharedPrefs(this);
 
        // recycler_book = (RecyclerView) findViewById(R.id.rc_mybook);
         data_book = populateList();
@@ -60,11 +63,13 @@ public class ReadOfflineActivity extends AppCompatActivity {
                         String nama_buku = data_book.get(position).getValue();
                         String id_buku = data_book.get(position).getId();
                         String file_location = data_book.get(position).getLocation();
+                        String idPeminjaman = data_book.get(position).getId_peminjaman();
                         //Toast.makeText(getBaseContext(), "List (" + id_buku + ")" + nama_buku + " Ditekan" , Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(ReadOfflineActivity.this, ReadBookActivity.class);
                         intent.putExtra("id_buku", id_buku);
                         intent.putExtra("judul_buku", nama_buku);
                         intent.putExtra("file_location", file_location);
+                        intent.putExtra("id_peminjaman", idPeminjaman);
                         startActivity (intent);
                         finish();
                     }
@@ -132,7 +137,10 @@ public class ReadOfflineActivity extends AppCompatActivity {
 
     private ArrayList<DataBook> populateList(){
         ArrayList<DataBook>  list = new ArrayList<>();
+
         String my_book_list = file_read(master_dir,"list.dat");
+//        String my_book_list = prefs.getListData();
+
         String[] data_list = my_book_list.split("&&&&");
         for (int i = 0; i < data_list.length; i++) {
             if (!data_list[i].equals(""))
@@ -140,6 +148,7 @@ public class ReadOfflineActivity extends AppCompatActivity {
                 Log.d("data_list [" + i + "] :",data_list[i]);
                 String[] data_list_item = data_list[i].split(";");
                 String id_book="";
+                String id_peminjaman="";
                 String name_book="";
                 String file_location="";
                 for (int a = 0; a < data_list_item.length; a++) {
@@ -159,10 +168,14 @@ public class ReadOfflineActivity extends AppCompatActivity {
                         {
                             file_location = data_list_item[a].replace("location:","");
                         }
+                        else if (a==7)
+                        {
+                            id_peminjaman = data_list_item[a].replace("id_peminjaman:","");
+                        }
                     }
                 }
                 if (!id_book.equals("") && !name_book.equals("")) {
-                    DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_book, name_book, 0,file_location);
+                    DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_book, name_book, 0,file_location, id_peminjaman);
                     list.add(editModel);
                 }
             }

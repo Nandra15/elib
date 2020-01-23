@@ -61,10 +61,13 @@
                     android:text=""
                     android:textColor="#000"
                     android:textSize="18dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     />
 
             </RelativeLayout>
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

@@ -20,7 +20,6 @@ public class AdapterRecyclerBook extends RecyclerView.Adapter<AdapterRecyclerBoo
     public static ArrayList<DataBook> editModelArrayList;
 
     public AdapterRecyclerBook(Context ctx, ArrayList<DataBook> editModelArrayList){
-
         inflater = LayoutInflater.from(ctx);
         this.editModelArrayList = editModelArrayList;
     }

@@ -126,7 +126,7 @@ public class MainActivity extends BaseActivity {
         }
 
         */
-        clear_data();
+//        clear_data();
         file_write(true, session_user_id, master_dir, "account.dat");
         btn_caribuku.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,11 +188,13 @@ public class MainActivity extends BaseActivity {
     private void getProfil() {
         ProfilResponse profilResponse =
                 new Gson().fromJson(prefs.getString(SharedPrefs.PROFIL), ProfilResponse.class);
-        session_user_id = profilResponse.getData().getId();
-        session_user_nim = profilResponse.getData().getNim();
-        session_user_name = profilResponse.getData().getNama();
-        session_user_hp = profilResponse.getData().getNoTelp();
-        session_user_addr = profilResponse.getData().getMacAddress();
+        if (profilResponse != null) {
+            session_user_id = profilResponse.getData().getId();
+            session_user_nim = profilResponse.getData().getNim();
+            session_user_name = profilResponse.getData().getNama();
+            session_user_hp = profilResponse.getData().getNoTelp();
+            session_user_addr = profilResponse.getData().getMacAddress();
+        }
     }
 
     @Override

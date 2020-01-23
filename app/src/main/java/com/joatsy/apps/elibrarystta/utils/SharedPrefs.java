@@ -14,6 +14,7 @@ public class SharedPrefs {
     public static final String NIM = "NIM";
     public static final String NAMA = "NAMA";
     public static final String PROFIL = "PROFIL";
+    public static final String LIST_DAT = "LIST_DAT";
 
 
     public SharedPrefs(Context context) {
@@ -46,6 +47,16 @@ public class SharedPrefs {
         spEditor.commit();
         saveSPBoolean(IS_LOGED_IN, false);
 
+    }
+
+    public void saveListData(String data){
+        saveSPString(LIST_DAT, data);
+    }
+
+    public String getListData(){
+        if (getString(LIST_DAT)!=null)
+            return getString(LIST_DAT);
+        else return "null";
     }
 
     public Integer getNIM() {

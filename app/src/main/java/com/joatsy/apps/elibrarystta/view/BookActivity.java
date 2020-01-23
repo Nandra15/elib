@@ -15,6 +15,7 @@ import com.joatsy.apps.elibrarystta.Adapter.AdapterRecyclerBook;
 import com.joatsy.apps.elibrarystta.Data.DataBook;
 import com.joatsy.apps.elibrarystta.Event.RecyclerItemClickListener;
 import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,14 +45,24 @@ public class BookActivity extends AppCompatActivity {
     public static ArrayList<DataBook> data_book;
     ArrayList<String> arraylist = new ArrayList<String>();
     private ProgressDialog loading_dialog;
-    String kategori, nama;
+    private SharedPrefs pref;
+    private String kategori, nama;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
+        kategori= "";
+        nama = "";
+        intent = getIntent();
+        if (intent.hasExtra("kategori")) {
+            kategori = getIntent().getStringExtra("kategori");
+        }
+        if (intent.hasExtra("nama")) {
+            nama = getIntent().getStringExtra("nama");
+        }
         recycler_book = (RecyclerView) findViewById(R.id.rc_book);
         data_book = populateList();
-        intent = getIntent();
+        pref = new SharedPrefs(this);
         recycler_adapter = new AdapterRecyclerBook(this,data_book);
         recycler_book.setAdapter(recycler_adapter);
         recycler_book.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
@@ -69,7 +80,7 @@ public class BookActivity extends AppCompatActivity {
 //                        intent.putExtra("nama", tx_name.getText().toString());
                         startActivity (intent);
 
-                        if (check_in_mybook(id_buku)==true)
+                        if (check_in_mybook(id_buku))
                         {
                             finish();
                         }
@@ -85,12 +96,7 @@ public class BookActivity extends AppCompatActivity {
         loading_dialog.setMessage("Mencoba mengambil data kategori. Tunggu sebentar...");
         loading_dialog.setIndeterminate(true);
         loading_dialog.show();
-        if (intent.hasExtra("kategori")) {
-            kategori = getIntent().getStringExtra("kategori");
-        }
-        if (intent.hasExtra("nama")) {
-            nama = getIntent().getStringExtra("nama");
-        }
+
         //new GetData().execute(SERVER_ADDRS + "buku.php?kategori=" + kategori + "&s=" + nama, "book");
         new GetData().execute(SERVER_ADDRS + "catalog", "book");
     }
@@ -104,6 +110,7 @@ public class BookActivity extends AppCompatActivity {
     boolean check_in_mybook(String id_book)
     {
         String my_book_list = file_read(master_dir,"list.dat");
+//        String my_book_list = pref.getListData();
         if (my_book_list.contains("id:" + id_book + ";")) {
             return true;
         }
@@ -211,12 +218,12 @@ public class BookActivity extends AppCompatActivity {
                         String id_buku = userDetail.getString("id");
                         String judul_buku = userDetail.getString("judul");
                         String file_location = userDetail.getString("pdf_path");
-                        if (judul_buku.contains(nama)){
+                        if (judul_buku.toLowerCase().contains(nama.toLowerCase())){
                             if (count_data==1)
                             {
                                 data_book.clear();
                             }
-                            DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_buku,judul_buku,0,file_location);
+                            DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_buku,judul_buku,0,file_location,"");
                             data_book.add(editModel);
                         }
 

@@ -73,6 +73,8 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
 
     @Override
     public void profil(String s) {
+
+        Log.e("tes", s);
         SharedPrefs prefs = new SharedPrefs(this);
         prefs.saveSPBoolean(SharedPrefs.IS_LOGED_IN, true);
         prefs.saveSPInt(NIM, Integer.parseInt(nim));

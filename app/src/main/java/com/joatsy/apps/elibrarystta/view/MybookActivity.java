@@ -14,6 +14,7 @@ import com.joatsy.apps.elibrarystta.Adapter.AdapterRecyclerBook;
 import com.joatsy.apps.elibrarystta.Data.DataBook;
 import com.joatsy.apps.elibrarystta.Event.RecyclerItemClickListener;
 import com.joatsy.apps.elibrarystta.R;
+import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,11 +34,13 @@ public class MybookActivity extends AppCompatActivity {
     public static ArrayList<DataBook> data_book;
     ArrayList<String> arraylist = new ArrayList<String>();
     private ProgressDialog loading_dialog;
+    private SharedPrefs pref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mybook);
         recycler_book = (RecyclerView) findViewById(R.id.rc_mybook);
+        pref = new SharedPrefs(this);
         data_book = populateList();
         if (data_book.size()<=0)
         {
@@ -54,11 +57,13 @@ public class MybookActivity extends AppCompatActivity {
                         String nama_buku = data_book.get(position).getValue();
                         String id_buku = data_book.get(position).getId();
                         String file_location = data_book.get(position).getLocation();
+                        String idPeminjaman= data_book.get(position).getId_peminjaman();
                         //Toast.makeText(getBaseContext(), "List (" + id_buku + ")" + nama_buku + " Ditekan" , Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(MybookActivity.this, ReadBookActivity.class);
                         intent.putExtra("id_buku", id_buku);
                         intent.putExtra("judul_buku", nama_buku);
                         intent.putExtra("file_location", file_location);
+                        intent.putExtra("id_peminjaman", idPeminjaman);
                         startActivity (intent);
                         finish();
                     }
@@ -127,21 +132,23 @@ public class MybookActivity extends AppCompatActivity {
     private ArrayList<DataBook> populateList(){
         ArrayList<DataBook>  list = new ArrayList<>();
         String my_book_list = file_read(master_dir,"list.dat");
+//        String my_book_list = pref.getListData();
         String[] data_list = my_book_list.split("&&&&");
+        Log.d("list_abc", my_book_list.toString() + " x");
         for (int i = 0; i < data_list.length; i++) {
             if (!data_list[i].equals(""))
             {
                 Log.d("data_list [" + i + "] :",data_list[i]);
                 String[] data_list_item = data_list[i].split(";");
                 String id_book="";
+                String id_peminjaman="";
                 String name_book="";
                 String file_location="";
                 for (int a = 0; a < data_list_item.length; a++) {
                     if (!data_list_item[a].equals(""))
                     {
-                        //id:1;title:?;file:sn74hc595.pdf;duration:7;from:2019-06-01;end:2019-06-08
-                        Log.d("data_list_item [" + a + "] :",data_list_item[a]);
-                        if (a==0)
+
+                    if (a==0)
                         {
                            id_book = data_list_item[a].replace("id:","");
                         }
@@ -153,10 +160,14 @@ public class MybookActivity extends AppCompatActivity {
                         {
                             file_location = data_list_item[a].replace("location:","");
                         }
+                        else if (a==7)
+                        {
+                            id_peminjaman = data_list_item[a].replace("id_peminjaman:","");
+                        }
                     }
                 }
                 if (!id_book.equals("") && !name_book.equals("")) {
-                    DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_book, name_book, 0,file_location);
+                    DataBook editModel = new DataBook(String.valueOf(R.drawable.ic_library_books_purple_24dp), id_book, name_book, 0,file_location, id_peminjaman);
                     list.add(editModel);
                 }
             }

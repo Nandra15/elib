@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity {
     protected ProgressDialog loading_dialog;
@@ -41,11 +42,17 @@ public class BaseActivity extends AppCompatActivity {
         loading_dialog = new ProgressDialog(this);
         loading_dialog.setMessage(s);
         loading_dialog.setIndeterminate(true);
+        if (!loading_dialog.isShowing())
         loading_dialog.show();
     }
 
     protected void hideLoading() {
         loading_dialog.dismiss();
     }
+
+    protected void showToast(String mess){
+        Toast.makeText(this, mess, Toast.LENGTH_SHORT).show();
+    }
+
 
 }
