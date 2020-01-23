@@ -108,11 +108,13 @@ public class ViewerActivity extends BaseActivity {
         btn_pinjam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(ViewerActivity.this, RegisterActivity.class);
-//                startActivity (intent);
-                if (checkInet(1)) {
-                    show_form_load();
-                }
+                String my_book_list = file_read(master_dir, "list.dat");
+                String[] data_list = my_book_list.split("&&&&");
+                if (data_list.length < 2) {
+                    if (checkInet(1)) {
+                        show_form_load();
+                    }
+                }else showToast("Sudah Mencapai Batas Peminjaman !");
             }
         });
     }
@@ -349,7 +351,7 @@ public class ViewerActivity extends BaseActivity {
                     String enddate = sdf.format(c.getTime());
 
                     String my_book_list = file_read(master_dir, "list.dat");
-                    idPeminjaman= String.valueOf(loanResponse.getData().getIdPeminjaman());
+                    idPeminjaman = String.valueOf(loanResponse.getData().getIdPeminjaman());
 //                     String my_book_list = pref.getListData();
 
                     if (my_book_list.equals("")) {
@@ -460,7 +462,7 @@ public class ViewerActivity extends BaseActivity {
         });
     }
 
-   private class myOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
+    private class myOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
             String text = parent.getItemAtPosition(pos).toString();
@@ -523,7 +525,7 @@ public class ViewerActivity extends BaseActivity {
         return false;
     }
 
-   private void copyfile(File src, File dst) {
+    private void copyfile(File src, File dst) {
         try {
             InputStream in = new FileInputStream(src);
             try {

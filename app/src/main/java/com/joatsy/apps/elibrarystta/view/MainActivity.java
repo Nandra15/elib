@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity {
 
         prefs = new SharedPrefs(this);
 
+
         if (!prefs.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
