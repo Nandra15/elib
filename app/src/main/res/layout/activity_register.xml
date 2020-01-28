@@ -37,6 +37,20 @@
                 />
 
             <EditText
+                android:id="@+id/txt_nim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:background="@color/transparant"
+                android:drawablePadding="12dp"
+                android:padding="18dp"
+                android:hint="NIM"
+                android:textColorHint="#777"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_account_box_gray_24dp"
+                />
+
+            <EditText
                 android:id="@+id/tx_register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

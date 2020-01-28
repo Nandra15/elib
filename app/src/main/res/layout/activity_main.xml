@@ -256,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="Pengaturan"
+                        android:text="Profile"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
                 </LinearLayout>

@@ -18,8 +18,27 @@ public interface ApiInterface {
                                   @Field("password") String pass,
                                   @Field("mac_addr") String mac);
 
+ @FormUrlEncoded
+    @POST("auth/register")
+    Observable<LoginResponse> register(@Field("nim") String nim,
+                                  @Field("nama") String nama,
+                                  @Field("email") String email,
+                                  @Field("no_telp") String telp,
+                                  @Field("password") String pass,
+                                  @Field("mac_addr") String mac);
+
     @GET("auth")
     Single<ProfilResponse> getProfil(@Query("id") int nim);
+
+    //{
+    //    "status": false,
+    //    "message": "Nim sudah terdaftar."
+    //}
+
+    //{
+    //    "status": true,
+    //    "message": "Registration succeed."
+    //}
 
 
 //    @FormUrlEncoded

@@ -14,7 +14,7 @@ import com.joatsy.apps.elibrarystta.network.ApiClient;
 import com.joatsy.apps.elibrarystta.network.ApiInterface;
 import com.joatsy.apps.elibrarystta.utils.SharedPrefs;
 import com.joatsy.apps.elibrarystta.view.MainActivity;
-import com.joatsy.apps.elibrarystta.view.RegisterActivity;
+import com.joatsy.apps.elibrarystta.view.register.RegisterActivity;
 
 import static com.joatsy.apps.elibrarystta.utils.SharedPrefs.NIM;
 import static com.joatsy.apps.elibrarystta.utils.SharedPrefs.PROFIL;
@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements LoginView.view {
             bLogin.setOnClickListener(view -> {
                 nim = txUserId.getText().toString();
                 String pass = txPassword.getText().toString();
-                presenter.login(nim, pass);
+                presenter.login(nim, pass, getMacAddr());
 
             });
 

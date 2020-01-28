@@ -1,4 +1,4 @@
-package com.joatsy.apps.elibrarystta.view.login;
+package com.joatsy.apps.elibrarystta.view.register;
 
 import android.util.Log;
 
@@ -13,25 +13,27 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginPresenter extends LoginView {
+public class RegisterPresenter extends RegisterView {
     private ApiInterface apiInterface;
-    private LoginView.view view;
+    private RegisterView.view view;
 
-    public LoginPresenter(ApiInterface apiInterface, LoginView.view view) {
+    public RegisterPresenter(ApiInterface apiInterface, RegisterView.view view) {
         this.apiInterface = apiInterface;
         this.view = view;
     }
 
     @Override
-    Disposable login(String nim, String password, String maccadress) {
+    Disposable register(String nama, String nim, String maccadress, String email, String pass, String telp) {
         view.loading();
-        String md5_pass = convert_md5(password);
-        return apiInterface.JJJ(nim, password, maccadress)
+        String md5_pass = convert_md5(pass);
+        return apiInterface.register(nim, nama, email, telp, pass, maccadress)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
                 .subscribe(loginResponse -> {
-                            view.success(loginResponse.toString());
+                            if (loginResponse.isStatus())
+                                view.success(loginResponse.getMessage());
+                            else view.fail(loginResponse.getMessage());
                         },
                         throwable -> {
                             if (isOutOfNetwork(throwable))
@@ -42,30 +44,10 @@ public class LoginPresenter extends LoginView {
                         });
     }
 
-    @Override
-    Disposable getprofil(String nim) {
-        view.loading();
-        return apiInterface.getProfil(Integer.parseInt(nim))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-
-                .subscribe(profilResponse -> {
-                            view.profil(new Gson().toJson(profilResponse));
-                        },
-                        throwable -> {
-                            if (isOutOfNetwork(throwable))
-                                view.error(R.string.out_of_network);
-                            else
-                                view.error(R.string.general_error);
-                            Log.e("error get profil", throwable.getMessage() + ":" + getErrorBody(throwable));
-                        });
-    }
-
-
     private String convert_md5(String s) {
         String MD5 = "MD5";
         try {
-            MessageDigest digest = java.security.MessageDigest
+            MessageDigest digest = MessageDigest
                     .getInstance(MD5);
             digest.update(s.getBytes());
             byte[] messageDigest = digest.digest();

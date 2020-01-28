@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.joatsy.apps.elibrarystta.Data.ProfilResponse;
@@ -25,6 +26,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 import static com.joatsy.apps.elibrarystta.network.ApiClient.BASE_URL;
 
@@ -47,7 +51,6 @@ public class MainActivity extends BaseActivity {
     public static boolean mode_offline = false;
 
     private SharedPrefs prefs;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +68,6 @@ public class MainActivity extends BaseActivity {
         tx_cari = findViewById(R.id.lb_home_cari);
 
         prefs = new SharedPrefs(this);
-
 
         if (!prefs.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -184,9 +186,14 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
+
     }
 
-    private void getProfil() {
+
+
+
+        private void getProfil() {
         ProfilResponse profilResponse =
                 new Gson().fromJson(prefs.getString(SharedPrefs.PROFIL), ProfilResponse.class);
         if (profilResponse != null) {
@@ -210,6 +217,8 @@ public class MainActivity extends BaseActivity {
                 .setPositiveButton("Ya", (arg0, arg1) -> System.exit(0))
                 .create().show();
     }
+
+
 
     private String file_read(String location_file, String name_file) {
 
